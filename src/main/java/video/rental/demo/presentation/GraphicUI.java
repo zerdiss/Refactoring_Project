@@ -30,6 +30,10 @@ public class GraphicUI extends JFrame {
 	private JSpinner videoTypeSpinner;
 	private JSpinner ratingSpinner;
 
+	private SpinnerListModel priceCodeModel;
+	private SpinnerListModel videoTypeModel;
+	private SpinnerListModel ratingModel;
+
 	private JTextArea textArea;
 
 	private Interactor interactor;
@@ -70,29 +74,36 @@ public class GraphicUI extends JFrame {
 		makeButton("Register User", (e) -> registerUser(), 18, 54, 117, 29);
 
 		makeLabel("User Code:", 147, 59, 70, 16);
-		makeTextField(217, 54, 50, 26);
+		userCodeField = new JTextField();
+		makeTextField(userCodeField, 217, 54, 50, 26);
 
 		makeLabel("Name:", 280, 59, 61, 16);
-		makeTextField(324, 54, 120, 26);
+		nameField = new JTextField();
+		makeTextField(nameField, 324, 54, 120, 26);
 
 		makeLabel("Birthday:", 462, 59, 60, 16);
-		makeTextField(520, 54, 96, 26);
+		birthdayField = new JTextField();
+		makeTextField(birthdayField, 520, 54, 96, 26);
 
 		makeSeparator(18, 86, 583, 1);
 
 		makeButton("Register Video", (e) -> registerVideo(), 18, 95, 117, 29);
 
 		makeLabel("Title:", 147, 100, 61, 16);
-		makeTextField(182, 95, 100, 26);
+		titleField = new JTextField();
+		makeTextField(titleField, 182, 95, 100, 26);
 
 		makeLabel("Price Code:", 294, 100, 75, 16);
-		makeSpinner(362, 95, 75, 26, new String[] { "Regular", "New", "Children" });
+		priceCodeModel = new SpinnerListModel(new String[] { "Regular", "New", "Children" });
+		makeSpinner(priceCodeSpinner, priceCodeModel, 362, 95, 75, 26);
 
 		makeLabel("Type:", 445, 100, 61, 16);
-		makeSpinner(480, 95, 55, 26, new String[] { "VHS", "CD", "DVD" });
+		videoTypeModel = new SpinnerListModel(new String[] { "VHS", "CD", "DVD" });
+		makeSpinner(videoTypeSpinner, videoTypeModel, 480, 95, 55, 26);
 
 		makeLabel("Rating:", 544, 100, 61, 16);
-		makeSpinner(590, 95, 70, 26, new String[] { "Twelve", "Fifteen", "Eighteen" });
+		ratingModel = new SpinnerListModel(new String[] { "Twelve", "Fifteen", "Eighteen" });
+		makeSpinner(ratingSpinner, ratingModel, 590, 95, 70, 26);
 
 		makeSeparator(18, 136, 583, 16);
 
@@ -117,18 +128,16 @@ public class GraphicUI extends JFrame {
 		getContentPane().add(scroll);
 	}
 
-	private void makeSpinner(int x, int y, int width, int height, String[] menu) {
-		SpinnerListModel model = new SpinnerListModel(menu);
-		priceCodeSpinner = new JSpinner(model);
-		priceCodeSpinner.setBounds(x, y, width, height);
-		getContentPane().add(priceCodeSpinner);
+	private void makeSpinner(JSpinner spinner, SpinnerListModel model, int x, int y, int width, int height) {
+		spinner = new JSpinner(model);
+		spinner.setBounds(x, y, width, height);
+		getContentPane().add(spinner);
 	}
 
-	private void makeTextField(int x, int y, int width, int height) {
-		userCodeField = new JTextField();
-		userCodeField.setBounds(x, y, width, height);
-		getContentPane().add(userCodeField);
-		userCodeField.setColumns(10);
+	private void makeTextField(JTextField textField, int x, int y, int width, int height) {
+		textField.setBounds(x, y, width, height);
+		getContentPane().add(textField);
+		textField.setColumns(10);
 	}
 
 	private void clear() {
