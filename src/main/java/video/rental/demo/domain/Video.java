@@ -146,4 +146,31 @@ public class Video {
                 return false;
         }
     }
+
+    public double getVideoPrice(int daysRented) {
+        double charge = 0;
+
+        switch (getPriceCode()) {
+        case Video.REGULAR:
+            charge += 2;
+            if (daysRented > 2)
+                charge += (daysRented - 2) * 1.5;
+                break;
+        case Video.NEW_RELEASE:
+                charge = daysRented * 3;
+                break;
+        case Video.CHILDREN:
+                charge += 1.5;
+                if (daysRented > 3)
+                    charge += (daysRented - 3) * 1.5;
+                    break;
+        }
+        return charge;
+    }
+
+    public boolean getVideoSpecialPoint() {
+        if (getPriceCode() == Video.NEW_RELEASE)
+            return true;
+        return false;
+    }
 }
