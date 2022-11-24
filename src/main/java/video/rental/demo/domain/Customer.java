@@ -69,7 +69,7 @@ public class Customer {
 			int eachPoint = 0;
 			int daysRented = each.getDaysRented();
 
-			eachCharge += each.getVideo().getVideoPrice(daysRented);
+			eachCharge += each.getVideo().getCharge(daysRented);
 
 			eachPoint++;
 			if (each.getVideo().getVideoSpecialPoint())

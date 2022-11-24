@@ -17,7 +17,7 @@ public class Video {
     @Id
     private String title;
     private Rating videoRating;
-    private int priceCode;
+    private Price priceCode;
 
     public static final int REGULAR = 1;
     public static final int NEW_RELEASE = 2;
@@ -34,10 +34,10 @@ public class Video {
     public Video() {
     } // for hibernate
 
-    public Video(String title, int videoType, int priceCode, Rating videoRating, LocalDate registeredDate) {
+    public Video(String title, int videoType, Price price, Rating videoRating, LocalDate registeredDate) {
         this.title = title;
         this.videoType = videoType;
-        this.priceCode = priceCode;
+        this.priceCode = price;
         this.videoRating = videoRating;
         this.registeredDate = registeredDate;
         this.rented = false;
@@ -65,11 +65,7 @@ public class Video {
     }
 
     public int getPriceCode() {
-        return priceCode;
-    }
-
-    public void setPriceCode(int priceCode) {
-        this.priceCode = priceCode;
+        return priceCode.priceCode();
     }
 
     public String getTitle() {
@@ -147,30 +143,13 @@ public class Video {
         }
     }
 
-    public double getVideoPrice(int daysRented) {
-        double charge = 0;
+	public double getCharge(int daysRented) {
+		return priceCode.getCharge(daysRented);
+	}
 
-        switch (getPriceCode()) {
-        case Video.REGULAR:
-            charge += 2;
-            if (daysRented > 2)
-                charge += (daysRented - 2) * 1.5;
-                break;
-        case Video.NEW_RELEASE:
-                charge = daysRented * 3;
-                break;
-        case Video.CHILDREN:
-                charge += 1.5;
-                if (daysRented > 3)
-                    charge += (daysRented - 3) * 1.5;
-                    break;
-        }
-        return charge;
-    }
-
-    public boolean getVideoSpecialPoint() {
-        if (getPriceCode() == Video.NEW_RELEASE)
-            return true;
-        return false;
-    }
+	public boolean getVideoSpecialPoint() {
+		if (getPriceCode() == Video.NEW_RELEASE)
+			return true;
+		return false;
+	}
 }
