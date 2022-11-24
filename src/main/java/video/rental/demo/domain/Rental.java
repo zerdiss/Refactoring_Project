@@ -91,7 +91,6 @@ public class Rental {
 
     public int getDaysRented() {
         LocalDateTime end = (getStatus() == 1) ? getReturnDate() : LocalDateTime.now();
-        int days = (int) (ChronoUnit.HOURS.between(getRentDate(), end) / 24);
-        return days == 0 ? 1 : days + 1;
+        return (int) (ChronoUnit.HOURS.between(getRentDate(), end) / 24) + 1;
     }
 }

@@ -1,7 +1,10 @@
 package video.rental.demo.domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -108,6 +111,35 @@ public class Customer {
 		}
 
 		return result;
+	}
+
+	private int getAge() {
+		// parse customer date of birth
+	    Calendar calDateOfBirth = Calendar.getInstance();
+	    try {
+	        calDateOfBirth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(getDateOfBirth().toString()));
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+	
+	    // get current date
+	    Calendar calNow = Calendar.getInstance();
+	    calNow.setTime(new java.util.Date());
+	
+	    // calculate age different in years and months
+	    int ageYr = (calNow.get(Calendar.YEAR) - calDateOfBirth.get(Calendar.YEAR));
+	    int ageMo = (calNow.get(Calendar.MONTH) - calDateOfBirth.get(Calendar.MONTH));
+	
+	    // decrement age in years if month difference is negative
+	    if (ageMo < 0) {
+	        ageYr--;
+	    }
+	    int age = ageYr;
+		return age;
+	}
+
+	public boolean isUnderAge(int checkAge) {
+	    return getAge() < checkAge;
 	}
 
 }
