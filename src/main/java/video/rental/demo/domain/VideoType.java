@@ -1,6 +1,14 @@
 package video.rental.demo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+@Entity
+@Table(name = "VIDEO_TYPE", uniqueConstraints = {@UniqueConstraint(columnNames = {"type"})})
 public abstract class VideoType {
+    @Id
     private final int type;
 
     public VideoType(int type) {
