@@ -126,4 +126,20 @@ public class Video {
 			return true;
 		return false;
 	}
+
+    int getDaysRentedLimit() {
+        int limit = 0;
+        switch (getVideoType()) {
+            case VHS:
+                limit = 5;
+                break;
+            case CD:
+                limit = 3;
+                break;
+            case DVD:
+                limit = 2;
+                break;
+        }
+        return limit;
+    }
 }
