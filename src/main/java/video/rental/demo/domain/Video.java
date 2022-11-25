@@ -14,13 +14,13 @@ public class Video {
     @Id
     private String title;
     private Rating videoRating;
-    private int priceCode;
+    private Price priceCode;
 
     public static final int REGULAR = 1;
     public static final int NEW_RELEASE = 2;
     public static final int CHILDREN = 3;
 
-    private int videoType;
+    private VideoType videoType;
     public static final int VHS = 1;
     public static final int CD = 2;
     public static final int DVD = 3;
@@ -31,10 +31,10 @@ public class Video {
     public Video() {
     } // for hibernate
 
-    public Video(String title, int videoType, int priceCode, Rating videoRating, LocalDate registeredDate) {
+    public Video(String title, int videoType, Price price, Rating videoRating, LocalDate registeredDate) {
         this.title = title;
-        this.videoType = videoType;
-        this.priceCode = priceCode;
+        this.videoType = VideoType.of(videoType);
+        this.priceCode = price;
         this.videoRating = videoRating;
         this.registeredDate = registeredDate;
         this.rented = false;
@@ -50,23 +50,11 @@ public class Video {
     }
 
     public int getLateReturnPointPenalty() {
-        //@formatter:off
-        int penalty = 0;
-        switch (videoType) {
-            case VHS: penalty = 1;  break;
-            case CD : penalty = 2;  break;
-            case DVD: penalty = 3;  break;
-        }
-        //@formatter:on
-        return penalty;
+        return videoType.getLateReturnPointPenalty();
     }
 
     public int getPriceCode() {
-        return priceCode;
-    }
-
-    public void setPriceCode(int priceCode) {
-        this.priceCode = priceCode;
+        return priceCode.priceCode();
     }
 
     public String getTitle() {
@@ -90,7 +78,7 @@ public class Video {
     }
 
     public int getVideoType() {
-        return videoType;
+        return videoType.getVideoType();
     }
 
     public boolean rentFor(Customer customer) {
@@ -119,5 +107,19 @@ public class Video {
         customerRentals.add(rental);
         customer.setRentals(customerRentals);
         return true;
+    }
+
+	public double getCharge(int daysRented) {
+		return priceCode.getCharge(daysRented);
+	}
+
+	public boolean getVideoSpecialPoint() {
+		if (getPriceCode() == Video.NEW_RELEASE)
+			return true;
+		return false;
+	}
+
+    int getDaysRentedLimit() {
+        return videoType.getDaysRentedLimit();
     }
 }
