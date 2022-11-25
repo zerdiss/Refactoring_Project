@@ -20,7 +20,7 @@ public class Video {
     public static final int NEW_RELEASE = 2;
     public static final int CHILDREN = 3;
 
-    private int videoType;
+    private VideoType videoType;
     public static final int VHS = 1;
     public static final int CD = 2;
     public static final int DVD = 3;
@@ -33,7 +33,7 @@ public class Video {
 
     public Video(String title, int videoType, Price price, Rating videoRating, LocalDate registeredDate) {
         this.title = title;
-        this.videoType = videoType;
+        this.videoType = VideoType.of(videoType);
         this.priceCode = price;
         this.videoRating = videoRating;
         this.registeredDate = registeredDate;
@@ -50,15 +50,7 @@ public class Video {
     }
 
     public int getLateReturnPointPenalty() {
-        //@formatter:off
-        int penalty = 0;
-        switch (videoType) {
-            case VHS: penalty = 1;  break;
-            case CD : penalty = 2;  break;
-            case DVD: penalty = 3;  break;
-        }
-        //@formatter:on
-        return penalty;
+        return videoType.getLateReturnPointPenalty();
     }
 
     public int getPriceCode() {
@@ -86,7 +78,7 @@ public class Video {
     }
 
     public int getVideoType() {
-        return videoType;
+        return videoType.getVideoType();
     }
 
     public boolean rentFor(Customer customer) {
@@ -128,18 +120,6 @@ public class Video {
 	}
 
     int getDaysRentedLimit() {
-        int limit = 0;
-        switch (getVideoType()) {
-            case VHS:
-                limit = 5;
-                break;
-            case CD:
-                limit = 3;
-                break;
-            case DVD:
-                limit = 2;
-                break;
-        }
-        return limit;
+        return videoType.getDaysRentedLimit();
     }
 }
