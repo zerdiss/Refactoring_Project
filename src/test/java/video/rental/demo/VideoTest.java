@@ -17,36 +17,33 @@ import video.rental.demo.domain.Video;
 
 class VideoTest {
 
-    static final LocalDate UNUSED_DATE = null;
+	static final LocalDate UNUSED_DATE = null;
 
-    @Test
-    void should_not_allow_rent_if_customer_under_age() {
-        // Given
-        Video video = new Video("ANY_TITLE", Video.CD, new RegularPrice(), Rating.FIFTEEN, UNUSED_DATE);
-        Customer shawn = new Customer(2, "Shawn", LocalDate.now().minusYears(13));
+	@Test
+	void should_not_allow_rent_if_customer_under_age() {
+		// Given
+		Video video = new Video("ANY_TITLE", Video.CD, new RegularPrice(), Rating.FIFTEEN, UNUSED_DATE);
+		Customer shawn = new Customer(2, "Shawn", LocalDate.now().minusYears(13));
 
-        // When
-        boolean result = video.rentFor(shawn);
+		// When
+		boolean result = video.rentFor(shawn);
 
-        // Then
-        assertFalse(result);
-    }
+		// Then
+		assertFalse(result);
+	}
 
-    @Test
-    void should_create_rental_if_customer_of_legal_age() {
-        // Given
-        Video video = new Video("ANY_TITLE", Video.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
-        Customer james = new Customer(0, "James", LocalDate.now().minusYears(20));
+	@Test
+	void should_create_rental_if_customer_of_legal_age() {
+		// Given
+		Video video = new Video("ANY_TITLE", Video.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
+		Customer james = new Customer(0, "James", LocalDate.now().minusYears(20));
 
-        // When
-        boolean result = video.rentFor(james);
+		// When
+		boolean result = video.rentFor(james);
 
-        // Then
-        assertAll("Valid rent", 
-        		() -> assertTrue(result),
-        		() -> assertEquals(1, james.getRentals().size()),
-        		() -> assertTrue(video.isRented())
-        );
-    }
+		// Then
+		assertAll("Valid rent", () -> assertTrue(result), () -> assertEquals(1, james.getRentalVideoCount()),
+				() -> assertTrue(video.isRented()));
+	}
 
 }

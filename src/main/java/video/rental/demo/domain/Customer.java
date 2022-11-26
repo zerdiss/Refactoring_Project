@@ -23,7 +23,7 @@ public class Customer {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Rental> rentals = new ArrayList<>();
 
-	public Customer() {	// for hibernate
+	public Customer() { // for hibernate
 	}
 
 	public Customer(int code, String name, LocalDate dateOfBirth) {
@@ -52,18 +52,54 @@ public class Customer {
 		return dateOfBirth;
 	}
 
-	public List<Rental> getRentals() {
-		return rentals;
+	public Boolean addRental(Rental rental) {
+		return rentals.add(rental);
 	}
 
-	public void setRentals(List<Rental> rentals) {
-		this.rentals = rentals;
+	public void clearRentals() {
+		rentals.clear();
+	}
+
+	public Video returnVideo(String videoTitle) {
+		for (Rental rental : rentals) {
+			if (findRentedVideo(videoTitle, rental)) {
+				Video video = rental.returnVideo();
+				video.setRented(false);
+				return video;
+			}
+		}
+		return null;
+	}
+
+	private boolean findRentedVideo(String videoTitle, Rental rental) {
+		return rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented();
+	}
+
+	public String getCustomerRentalInfo() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Id: " + getCode() + ", " + "Name: " + getName() + ", " + "Rentals: " + rentals.size() + "\n");
+		for (Rental rental : rentals) {
+			builder.append(rental.getRentalInfo());
+		}
+		return builder.toString();
+	}
+
+	public String getCustomerRentalDetailInfo() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ID: " + getCode() + ", " + "Name: " + getName() + ", " + "Rentals: " + rentals.size() + "\n");
+		for (Rental rental : rentals) {
+			builder.append(rental.getRentalInfoDetail());
+		}
+		return builder.toString();
+	}
+
+	public int getRentalVideoCount() {
+		return rentals.size();
 	}
 
 	public String getReport() {
 		String result = "Customer Report for " + getName() + "\n";
 
-		List<Rental> rentals = getRentals();
 		double totalCharge = 0;
 		int totalPoint = 0;
 
@@ -81,13 +117,13 @@ public class Customer {
 			if (daysRented > each.getDaysRentedLimit())
 				eachPoint -= Math.min(eachPoint, each.getVideo().getLateReturnPointPenalty());
 
-			result += "\tTitle: " + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: " + eachCharge
-					+ "\tPoint: " + eachPoint + "\n";
+			result += "\tTitle: " + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: "
+					+ eachCharge + "\tPoint: " + eachPoint + "\n";
 
 			totalCharge += eachCharge;
 			totalPoint += eachPoint;
 		}
-		
+
 		result += "Total charge: " + totalCharge + "\tTotal Point: " + totalPoint + "\n";
 
 		if (totalPoint >= 10) {
@@ -101,31 +137,31 @@ public class Customer {
 
 	private int getAge() {
 		// parse customer date of birth
-	    Calendar calDateOfBirth = Calendar.getInstance();
-	    try {
-	        calDateOfBirth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(getDateOfBirth().toString()));
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	    }
-	
-	    // get current date
-	    Calendar calNow = Calendar.getInstance();
-	    calNow.setTime(new java.util.Date());
-	
-	    // calculate age different in years and months
-	    int ageYr = (calNow.get(Calendar.YEAR) - calDateOfBirth.get(Calendar.YEAR));
-	    int ageMo = (calNow.get(Calendar.MONTH) - calDateOfBirth.get(Calendar.MONTH));
-	
-	    // decrement age in years if month difference is negative
-	    if (ageMo < 0) {
-	        ageYr--;
-	    }
-	    int age = ageYr;
+		Calendar calDateOfBirth = Calendar.getInstance();
+		try {
+			calDateOfBirth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(getDateOfBirth().toString()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// get current date
+		Calendar calNow = Calendar.getInstance();
+		calNow.setTime(new java.util.Date());
+
+		// calculate age different in years and months
+		int ageYr = (calNow.get(Calendar.YEAR) - calDateOfBirth.get(Calendar.YEAR));
+		int ageMo = (calNow.get(Calendar.MONTH) - calDateOfBirth.get(Calendar.MONTH));
+
+		// decrement age in years if month difference is negative
+		if (ageMo < 0) {
+			ageYr--;
+		}
+		int age = ageYr;
 		return age;
 	}
 
 	public boolean isUnderAge(int checkAge) {
-	    return getAge() < checkAge;
+		return getAge() < checkAge;
 	}
 
 }
