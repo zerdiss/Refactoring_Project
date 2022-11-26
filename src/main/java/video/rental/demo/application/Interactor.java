@@ -23,9 +23,8 @@ public class Interactor {
 		this.repository = repository;
 	}
 
-	public String clearRentals(int customerCode) {
+	public String showCustomerInfo(int customerCode) {
 		StringBuilder builder = new StringBuilder();
-
 		Customer foundCustomer = getRepository().findCustomerById(customerCode);
 		if (foundCustomer == null) {
 			throw new IllegalArgumentException("No such customer exists");
@@ -37,11 +36,15 @@ public class Interactor {
 			builder.append("\tTitle: " + rental.getVideo().getTitle() + ", " + "Price Code: "
 					+ rental.getVideo().getPriceCode());
 		}
+		return builder.toString();
+	}
+
+	public void clearRentals(int customerCode) {
+
+		Customer foundCustomer = getRepository().findCustomerById(customerCode);
 
 		foundCustomer.setRentals(new ArrayList<Rental>());
 		getRepository().saveCustomer(foundCustomer);
-
-		return builder.toString();
 	}
 
 	public void returnVideo(int customerCode, String videoTitle) {

@@ -41,16 +41,20 @@ public class CmdUI {
 		System.out.println("Bye");
 	}
 
-	public void clearRentals() {
+	private int getCustomerCode() {
 		System.out.println("Enter customer code: ");
 		int customerCode = scanner.nextInt();
+		return customerCode;
+	}
 
-		System.out.print(interactor.clearRentals(customerCode));
+	private void clearRentals() {
+		int customerCode = getCustomerCode();
+		System.out.print(interactor.showCustomerInfo(customerCode));
+		interactor.clearRentals(customerCode);
 	}
 
 	public void returnVideo() {
-		System.out.println("Enter customer code: ");
-		int customerCode = scanner.nextInt();
+		int customerCode = getCustomerCode();
 
 		System.out.println("Enter video title to return: ");
 		String videoTitle = scanner.next();
@@ -75,20 +79,18 @@ public class CmdUI {
 	}
 
 	public void getCustomerReport() {
-		System.out.println("Enter customer code: ");
-		int code = scanner.nextInt();
+		int customerCode = getCustomerCode();
 
-		System.out.print(interactor.getCustomerReport(code));
+		System.out.print(interactor.getCustomerReport(customerCode));
 	}
 
 	public void rentVideo() {
-		System.out.println("Enter customer code: ");
-		int code = scanner.nextInt();
+		int customerCode = getCustomerCode();
 
 		System.out.println("Enter video title to rent: ");
 		String videoTitle = scanner.next();
 
-		interactor.rentVideo(code, videoTitle);
+		interactor.rentVideo(customerCode, videoTitle);
 	}
 
 	// Control Coupling Smell
@@ -97,13 +99,12 @@ public class CmdUI {
 			System.out.println("Enter customer name: ");
 			String name = scanner.next();
 
-			System.out.println("Enter customer code: ");
-			int code = scanner.nextInt();
+			int customerCode = getCustomerCode();
 
 			System.out.println("Enter customer birthday (YYYY-MM-DD): ");
 			String dateOfBirth = scanner.next();
 
-			interactor.registerCustomer(name, code, dateOfBirth);
+			interactor.registerCustomer(name, customerCode, dateOfBirth);
 		} else {
 			System.out.println("Enter video title to register: ");
 			String title = scanner.next();

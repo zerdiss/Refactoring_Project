@@ -150,9 +150,8 @@ public class GraphicUI extends JFrame {
 	private void clearRentals() {
 		int code = Integer.parseInt(userCodeField.getText().toString());
 
-		String result = interactor.clearRentals(code);
-
-		textArea.append(result);
+		textArea.append(interactor.showCustomerInfo(code));
+		interactor.clearRentals(code);
 	}
 
 	private void getCustomerReport() {
