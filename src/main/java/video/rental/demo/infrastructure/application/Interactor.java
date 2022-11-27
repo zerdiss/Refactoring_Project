@@ -1,4 +1,4 @@
-package video.rental.demo.application;
+package video.rental.demo.infrastructure.application;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,17 +11,21 @@ import video.rental.demo.domain.Rating;
 import video.rental.demo.domain.RegularPrice;
 import video.rental.demo.domain.Repository;
 import video.rental.demo.domain.Video;
+import video.rental.demo.infrastructure.RepositoryCustomerImpl;
+import video.rental.demo.infrastructure.RepositoryVideoImpl;
 
 public class Interactor {
-	private Repository repository;
+	private RepositoryCustomerImpl repositoryCustomer;
+	private RepositoryVideoImpl repositoryVideo;
 
-	public Interactor(Repository repository) {
+	public Interactor(RepositoryCustomerImpl repoCustomer, RepositoryVideoImpl repoVideo) {
 		super();
-		this.repository = repository;
+		this.repositoryCustomer = repoCustomer;
+		this.repositoryVideo = repoVideo;
 	}
 
 	public String showCustomerInfo(int customerCode) {
-		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+		Customer foundCustomer = getRepositoryCustomer().findCustomerById(customerCode);
 		if (foundCustomer == null) {
 			throw new IllegalArgumentException("No such customer exists");
 		}
@@ -30,29 +34,29 @@ public class Interactor {
 
 	public void clearRentals(int customerCode) {
 
-		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+		Customer foundCustomer = getRepositoryCustomer().findCustomerById(customerCode);
 
 		foundCustomer.clearRentals();
-		getRepository().saveCustomer(foundCustomer);
+		getRepositoryCustomer().saveCustomer(foundCustomer);
 	}
 
 	public void returnVideo(int customerCode, String videoTitle) {
-		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+		Customer foundCustomer = getRepositoryCustomer().findCustomerById(customerCode);
 		if (foundCustomer == null) {
 			throw new IllegalArgumentException("No such customer exists");
 		}
 
 		Video video = foundCustomer.returnVideo(videoTitle);
 		if (video != null)
-			getRepository().saveVideo(video);
+			getRepositoryVideo().saveVideo(video);
 
-		getRepository().saveCustomer(foundCustomer);
+		getRepositoryCustomer().saveCustomer(foundCustomer);
 	}
 
 	public String listVideos() {
 		StringBuilder builder = new StringBuilder();
 
-		for (Video video : getRepository().findAllVideos()) {
+		for (Video video : getRepositoryVideo().findAllVideos()) {
 			builder.append("Video type: " + video.getVideoType() + ", " + "Price code: " + video.getPriceCode() + ", "
 					+ "Rating: " + video.getVideoRating() + ", " + "Title: " + video.getTitle() + "\n");
 		}
@@ -62,7 +66,7 @@ public class Interactor {
 
 	public String listCustomers() {
 		StringBuilder builder = new StringBuilder();
-		for (Customer customer : getRepository().findAllCustomers()) {
+		for (Customer customer : getRepositoryCustomer().findAllCustomers()) {
 			builder.append(customer.getCustomerRentalDetailInfo());
 		}
 		return builder.toString();
@@ -70,7 +74,7 @@ public class Interactor {
 
 	public String getCustomerReport(int code) {
 		StringBuilder builder = new StringBuilder();
-		Customer foundCustomer = getRepository().findCustomerById(code);
+		Customer foundCustomer = getRepositoryCustomer().findCustomerById(code);
 		if (foundCustomer == null) {
 			throw new IllegalArgumentException("No such customer exists");
 		}
@@ -80,19 +84,19 @@ public class Interactor {
 	}
 
 	public void rentVideo(int code, String videoTitle) {
-		Customer foundCustomer = getRepository().findCustomerById(code);
+		Customer foundCustomer = getRepositoryCustomer().findCustomerById(code);
 		if (foundCustomer == null)
 			throw new IllegalArgumentException("No such customer exists");
 
-		Video foundVideo = getRepository().findVideoByTitle(videoTitle);
+		Video foundVideo = getRepositoryVideo().findVideoByTitle(videoTitle);
 		if (foundVideo == null)
 			throw new IllegalArgumentException("Cannot find the video " + videoTitle);
 		if (foundVideo.isRented())
 			throw new IllegalStateException("The video " + videoTitle + " is already rented");
 
 		if (foundVideo.rentFor(foundCustomer)) {
-			getRepository().saveVideo(foundVideo);
-			getRepository().saveCustomer(foundCustomer);
+			getRepositoryVideo().saveVideo(foundVideo);
+			getRepositoryCustomer().saveCustomer(foundCustomer);
 		} else {
 			throw new IllegalStateException(
 					"Customer " + foundCustomer.getName() + " cannot rent this video because he/she is under age.");
@@ -101,7 +105,7 @@ public class Interactor {
 
 	public void registerCustomer(String name, int code, String dateOfBirth) {
 		// dirty hack for the moment
-		if (getRepository().findAllCustomers().stream().mapToInt(Customer::getCode).anyMatch(c -> c == code)) {
+		if (getRepositoryCustomer().findAllCustomers().stream().mapToInt(Customer::getCode).anyMatch(c -> c == code)) {
 			throw new IllegalArgumentException("Customer code " + code + " already exists");
 		}
 
@@ -110,7 +114,7 @@ public class Interactor {
 		} catch (Exception ignored) {
 		}
 
-		getRepository().saveCustomer(new Customer(code, name, LocalDate.parse(dateOfBirth)));
+		getRepositoryCustomer().saveCustomer(new Customer(code, name, LocalDate.parse(dateOfBirth)));
 	}
 
 	public void registerVideo(String title, int videoType, int price, int videoRating) {
@@ -136,15 +140,19 @@ public class Interactor {
 			throw new IllegalArgumentException("No such priceCode " + price);
 
 		// dirty hack for the moment
-		if (getRepository().findAllVideos().stream().map(Video::getTitle).anyMatch(t -> t.equals(title))) {
+		if (getRepositoryVideo().findAllVideos().stream().map(Video::getTitle).anyMatch(t -> t.equals(title))) {
 			throw new IllegalArgumentException("Video " + title + " already exists");
 		}
 
-		getRepository().saveVideo(new Video(title, videoType, priceCode, rating, registeredDate));
+		getRepositoryVideo().saveVideo(new Video(title, videoType, priceCode, rating, registeredDate));
 	}
 
-	private Repository getRepository() {
-		return repository;
+	private RepositoryCustomerImpl getRepositoryCustomer() {
+		return repositoryCustomer;
+	}
+
+	private RepositoryVideoImpl getRepositoryVideo() {
+		return repositoryVideo;
 	}
 
 }

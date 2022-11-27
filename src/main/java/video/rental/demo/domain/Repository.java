@@ -1,19 +1,57 @@
 package video.rental.demo.domain;
 
-import java.util.List;
+import video.rental.demo.infrastructure.PersistenceManager;
 
-public interface Repository {
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-	List<Customer> findAllCustomers();
+public class Repository {
 
-	List<Video> findAllVideos();
+	/*
+	 * Database Access private methods
+	 */
 
-	Customer findCustomerById(int code);
+	// JPA EntityManager
+	private static final EntityManager em = PersistenceManager.INSTANCE.getEntityManager();
 
-	Video findVideoByTitle(String title);
+	public <T> T find(Supplier<T> action) {
+		T value = null;
+		try {
+			getEm().getTransaction().begin();
+			value = action.get();
+			getEm().getTransaction().commit();
+		} catch (PersistenceException ex) {
+			ex.printStackTrace();
+		}
+		return value;
+	}
 
-	void saveCustomer(Customer customer);
+	public <T> void doIt(T value, Consumer<T> action) {
+		try {
+			getEm().getTransaction().begin();
+			action.accept(value);
+			getEm().getTransaction().commit();
+		} catch (PersistenceException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-	void saveVideo(Video video);
+	public static EntityManager getEm() {
+		return em;
+	}
+
+//	List<Customer> findAllCustomers();
+//
+//	List<Video> findAllVideos();
+//
+//	Customer findCustomerById(int code);
+//
+//	Video findVideoByTitle(String title);
+//
+//	void saveCustomer(Customer customer);
+//
+//	void saveVideo(Video video);
 
 }

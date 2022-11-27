@@ -8,9 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import video.rental.demo.application.Interactor;
-import video.rental.demo.domain.Repository;
-import video.rental.demo.infrastructure.RepositoryMemImpl;
+import video.rental.demo.infrastructure.application.Interactor;
+import video.rental.demo.infrastructure.RepositoryCustomerImpl;
+import video.rental.demo.infrastructure.RepositoryCustomerMemImpl;
+import video.rental.demo.infrastructure.RepositoryVideoImpl;
+import video.rental.demo.infrastructure.RepositoryVideoMemImpl;
 import video.rental.demo.presentation.CmdUI;
 import video.rental.demo.util.SampleGenerator;
 
@@ -57,10 +59,12 @@ public class GoldenMaster {
 		// Input redirection
 		ByteArrayInputStream istream = new ByteArrayInputStream(simulatedInput.getBytes());
 		System.setIn(istream);
-	
-		Repository repository = new RepositoryMemImpl();
-		new SampleGenerator(repository).generateSamples();
-		Interactor interactor = new Interactor(repository);
+
+
+		RepositoryCustomerImpl repoCustomer = new RepositoryCustomerMemImpl();
+		RepositoryVideoImpl repoVideo = new RepositoryVideoMemImpl();
+		new SampleGenerator(repoCustomer, repoVideo).generateSamples();
+		Interactor interactor = new Interactor(repoCustomer, repoVideo);
 		CmdUI cmdUI = new CmdUI(interactor);
 		
 		cmdUI.start();
