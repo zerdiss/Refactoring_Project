@@ -2,7 +2,7 @@ package video.rental.demo.presentation;
 
 import java.util.Scanner;
 
-import video.rental.demo.application.Interactor;
+import video.rental.demo.infrastructure.application.Interactor;
 
 public class CmdUI {
 	private static final Scanner scanner = new Scanner(System.in);
