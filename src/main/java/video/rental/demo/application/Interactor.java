@@ -2,8 +2,6 @@ package video.rental.demo.application;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import video.rental.demo.domain.ChildrenPrice;
 import video.rental.demo.domain.Customer;
@@ -11,7 +9,6 @@ import video.rental.demo.domain.NewReleasePrice;
 import video.rental.demo.domain.Price;
 import video.rental.demo.domain.Rating;
 import video.rental.demo.domain.RegularPrice;
-import video.rental.demo.domain.Rental;
 import video.rental.demo.domain.Repository;
 import video.rental.demo.domain.Video;
 
@@ -23,25 +20,20 @@ public class Interactor {
 		this.repository = repository;
 	}
 
-	public String clearRentals(int customerCode) {
-		StringBuilder builder = new StringBuilder();
-
+	public String showCustomerInfo(int customerCode) {
 		Customer foundCustomer = getRepository().findCustomerById(customerCode);
 		if (foundCustomer == null) {
 			throw new IllegalArgumentException("No such customer exists");
 		}
+		return foundCustomer.getCustomerRentalInfo();
+	}
 
-		builder.append("Id: " + foundCustomer.getCode() + ", " + "Name: " + foundCustomer.getName() + ", " + "Rentals: "
-				+ foundCustomer.getRentals().size() + "\n");
-		for (Rental rental : foundCustomer.getRentals()) {
-			builder.append("\tTitle: " + rental.getVideo().getTitle() + ", " + "Price Code: "
-					+ rental.getVideo().getPriceCode());
-		}
+	public void clearRentals(int customerCode) {
 
-		foundCustomer.setRentals(new ArrayList<Rental>());
+		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+
+		foundCustomer.clearRentals();
 		getRepository().saveCustomer(foundCustomer);
-
-		return builder.toString();
 	}
 
 	public void returnVideo(int customerCode, String videoTitle) {
@@ -50,16 +42,9 @@ public class Interactor {
 			throw new IllegalArgumentException("No such customer exists");
 		}
 
-		List<Rental> customerRentals = foundCustomer.getRentals();
-
-		for (Rental rental : customerRentals) {
-			if (rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented()) {
-				Video video = rental.returnVideo();
-				video.setRented(false);
-				getRepository().saveVideo(video);
-				break;
-			}
-		}
+		Video video = foundCustomer.returnVideo(videoTitle);
+		if (video != null)
+			getRepository().saveVideo(video);
 
 		getRepository().saveCustomer(foundCustomer);
 	}
@@ -78,12 +63,7 @@ public class Interactor {
 	public String listCustomers() {
 		StringBuilder builder = new StringBuilder();
 		for (Customer customer : getRepository().findAllCustomers()) {
-			builder.append("ID: " + customer.getCode() + ", " + "Name: " + customer.getName() + ", " + "Rentals: "
-					+ customer.getRentals().size() + "\n");
-			for (Rental rental : customer.getRentals()) {
-				builder.append("\tTitle: " + rental.getVideo().getTitle() + ", " + "Price Code: "
-						+ rental.getVideo().getPriceCode() + ", " + "Return Status: " + rental.getStatus() + "\n");
-			}
+			builder.append(customer.getCustomerRentalDetailInfo());
 		}
 		return builder.toString();
 	}
