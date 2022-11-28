@@ -1,6 +1,6 @@
 package video.rental.demo;
 
-import video.rental.demo.infrastructure.application.Interactor;
+import video.rental.demo.application.Interactor;
 import video.rental.demo.infrastructure.RepositoryCustomerImpl;
 import video.rental.demo.infrastructure.RepositoryVideoImpl;
 import video.rental.demo.presentation.GraphicUI;

@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerListModel;
 
-import video.rental.demo.infrastructure.application.Interactor;
+import video.rental.demo.application.Interactor;
 
 @SuppressWarnings("serial")
 public class GraphicUI extends JFrame {

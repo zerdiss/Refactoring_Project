@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import video.rental.demo.infrastructure.application.Interactor;
+import video.rental.demo.application.Interactor;
 import video.rental.demo.infrastructure.RepositoryCustomerImpl;
 import video.rental.demo.infrastructure.RepositoryCustomerMemImpl;
 import video.rental.demo.infrastructure.RepositoryVideoImpl;

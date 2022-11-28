@@ -1,4 +1,4 @@
-package video.rental.demo.infrastructure.application;
+package video.rental.demo.application;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
