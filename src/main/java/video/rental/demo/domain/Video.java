@@ -14,14 +14,14 @@ public class Video {
 	@Id
 	private String title;
 	private Rating videoRating;
-	@OneToOne
+
 	private Price priceCode;
 
 	public static final int REGULAR = 1;
 	public static final int NEW_RELEASE = 2;
 	public static final int CHILDREN = 3;
 
-	@OneToOne
+
 	private VideoType videoType;
 	public static final int VHS = 1;
 	public static final int CD = 2;
