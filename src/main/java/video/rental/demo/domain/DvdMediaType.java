@@ -1,8 +1,8 @@
 package video.rental.demo.domain;
 
-public class DvdVideoType extends VideoType {
-    public DvdVideoType() {
-        super(Video.DVD);
+public class DvdMediaType extends MediaType {
+    public DvdMediaType() {
+        super(MediaType.DVD);
     }
     public int getDaysRentedLimit() {
         return 5;

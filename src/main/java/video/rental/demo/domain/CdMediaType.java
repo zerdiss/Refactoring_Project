@@ -1,9 +1,9 @@
 package video.rental.demo.domain;
 
-public class CdVideoType extends VideoType {
+public class CdMediaType extends MediaType {
 
-    public CdVideoType() {
-        super(Video.CD);
+    public CdMediaType() {
+        super(MediaType.CD);
     }
 
     public int getDaysRentedLimit() {
