@@ -1,14 +1,9 @@
 package video.rental.demo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "VIDEO_TYPE", uniqueConstraints = {@UniqueConstraint(columnNames = {"type"})})
-public abstract class VideoType {
-    @Id
+
+public abstract class VideoType implements Serializable {
     private final int type;
 
     public VideoType(int type) {

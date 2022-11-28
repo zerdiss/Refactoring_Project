@@ -1,14 +1,8 @@
 package video.rental.demo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "PRICE_CODE", uniqueConstraints = {@UniqueConstraint(columnNames = {"_priceCode"})})
-public abstract class Price {
-	@Id
+public abstract class Price implements Serializable {
 	private int _priceCode;
 
 	public Price(int price) {
