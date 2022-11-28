@@ -82,8 +82,11 @@ public class Rental {
 	}
 
 	public int getDaysRented() {
-		LocalDateTime end = (getStatus() == 1) ? getReturnDate() : LocalDateTime.now();
-		return (int) (ChronoUnit.HOURS.between(getRentDate(), end) / 24) + 1;
+		return (int) (ChronoUnit.HOURS.between(getRentDate(), getEndDate()) / 24) + 1;
+	}
+
+	private LocalDateTime getEndDate() {
+		return (getStatus() == 1) ? getReturnDate() : LocalDateTime.now();
 	}
 
 	public String getRentalInfo() {
