@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -22,10 +21,7 @@ public class Video {
 	public static final int CHILDREN = 3;
 
 
-	private VideoType videoType;
-	public static final int VHS = 1;
-	public static final int CD = 2;
-	public static final int DVD = 3;
+	private MediaType mediaType;
 
 	private LocalDate registeredDate;
 	private boolean rented;
@@ -35,7 +31,7 @@ public class Video {
 
 	public Video(String title, int videoType, Price price, Rating videoRating, LocalDate registeredDate) {
 		this.title = title;
-		this.videoType = VideoType.of(videoType);
+		this.mediaType = MediaType.of(videoType);
 		this.priceCode = price;
 		this.videoRating = videoRating;
 		this.registeredDate = registeredDate;
@@ -46,13 +42,13 @@ public class Video {
 		this.title = another.title;
 		this.videoRating = another.videoRating;
 		this.priceCode = another.priceCode;
-		this.videoType = another.videoType;
+		this.mediaType = another.mediaType;
 		this.registeredDate = another.registeredDate;
 		this.rented = another.rented;
 	}
 
 	public int getLateReturnPointPenalty() {
-		return videoType.getLateReturnPointPenalty();
+		return mediaType.getLateReturnPointPenalty();
 	}
 
 	public int getPriceCode() {
@@ -80,7 +76,7 @@ public class Video {
 	}
 
 	public int getVideoType() {
-		return videoType.getVideoType();
+		return mediaType.getVideoType();
 	}
 
 	public boolean rentFor(Customer customer) {
@@ -120,6 +116,6 @@ public class Video {
 	}
 
 	int getDaysRentedLimit() {
-		return videoType.getDaysRentedLimit();
+		return mediaType.getDaysRentedLimit();
 	}
 }

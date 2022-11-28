@@ -10,14 +10,11 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import video.rental.demo.domain.NewReleasePrice;
-import video.rental.demo.domain.Rating;
-import video.rental.demo.domain.Rental;
-import video.rental.demo.domain.Video;
+import video.rental.demo.domain.*;
 
 class RentalTest {
 	static final LocalDate UNUSED_DATE = null;
-	final Video ANY_VIDEO = new Video("ANY_TITLE", Video.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
+	final Video ANY_VIDEO = new Video("ANY_TITLE", MediaType.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
 
 	@Test
 	@DisplayName("rental status should be `rented` when created")

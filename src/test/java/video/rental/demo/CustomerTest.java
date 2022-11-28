@@ -7,22 +7,16 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import video.rental.demo.domain.ChildrenPrice;
-import video.rental.demo.domain.Customer;
-import video.rental.demo.domain.NewReleasePrice;
-import video.rental.demo.domain.Rating;
-import video.rental.demo.domain.RegularPrice;
-import video.rental.demo.domain.Rental;
-import video.rental.demo.domain.Video;
+import video.rental.demo.domain.*;
 
 class CustomerTest {
 
 	static final LocalDate UNUSED_DATE = null;
 
 	final Customer CUSTOMER = new Customer(0, "James", UNUSED_DATE);
-	final Video VIDEO_1 = new Video("V1", Video.CD, new RegularPrice(), Rating.FIFTEEN, UNUSED_DATE);
-	final Video VIDEO_2 = new Video("V2", Video.DVD, new ChildrenPrice(), Rating.TWELVE, UNUSED_DATE);
-	final Video VIDEO_3 = new Video("V3", Video.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
+	final Video VIDEO_1 = new Video("V1", MediaType.CD, new RegularPrice(), Rating.FIFTEEN, UNUSED_DATE);
+	final Video VIDEO_2 = new Video("V2", MediaType.DVD, new ChildrenPrice(), Rating.TWELVE, UNUSED_DATE);
+	final Video VIDEO_3 = new Video("V3", MediaType.VHS, new NewReleasePrice(), Rating.EIGHTEEN, UNUSED_DATE);
 
 	@Test
 	void setRentals_emptyList_clears_rentals() {
